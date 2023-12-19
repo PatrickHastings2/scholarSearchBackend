@@ -33,6 +33,8 @@ class ScholarSearchAPI(Resource):
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument("id", required=True, type=int)
+        parser.add_argument("username")
+        parser.add_argument("password")
         args = parser.parse_args()
         
         try:
