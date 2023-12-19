@@ -32,8 +32,7 @@ class ScholarSearchAPI(Resource):
 
     def put(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("username", required=True, type=str)
-        parser.add_argument("password", required=True, type=str)
+        parser.add_argument("id", required=True, type=int)
         args = parser.parse_args()
         
         try:
@@ -79,7 +78,7 @@ class ScholarSearchListAPI(Resource):
             db.session.commit()
             return
         except Exception as exception:
-            db.session.rollback()"
+            db.session.rollback()
             return {"message": f"error {exception}"}
 
 scholarSearchApi.add_resource(ScholarSearchAPI, "/scholarSearch")

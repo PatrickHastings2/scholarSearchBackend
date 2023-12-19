@@ -1,7 +1,7 @@
 from flask_cors import CORS
 from scholarSearchApi import app, db
 
-from scholarSearchApi import scholarSearchBp
+from scholarSearchApi.api.scholarSearch import scholarSearchBp
 
 from scholarSearchApi.model.scholarSearch import initScholarSearch
 
