@@ -1,51 +1,50 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource, reqparse
 from .. import db
-from ..model.data import Data
+from ..model.login import Login
 
-data_bp = Blueprint("data", __name__)
-data_api = Api(data_bp)
+login_bp = Blueprint("login", __name__)
+login_api = Api(login_bp)
 
-class DataAPI(Resource):
+class LoginAPI(Resource):
     def get(self):
         id = request.args.get("id")
-        data = db.session.query(Data).get(id)
-        if data:
-            return data.to_dict()
+        login = db.session.query(Login).get(id)
+        if login:
+            return login.to_dict()
         return {"message": "not found"}, 404
 
     def post(self):
         parser = reqparse.RequestParser()
-        
         parser.add_argument("username", required=True, type=str)
         parser.add_argument("password", required=True, type=str)
         args = parser.parse_args()
-        data = Data(args["username"], args["password"])
+        login = Login(args["username"], args["password"])
 
         try:
-            db.session.add(data)
+            db.session.add(login)
             db.session.commit()
-            return data.to_dict(), 201
+            return login.to_dict(), 201
         except Exception as exception:
             db.session.rollback()
-            return {"message": f"error {exception}"}, 500
+            return {"message":f"error {exception}"}, 500
 
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument("id", required=True, type=int)
-        parser.add_argument("username")
-        parser.add_argument("password")
+        parser.add_argument("username", type=str)
+        parser.add_argument("password", type=str)
         args = parser.parse_args()
         
         try:
-            data = db.session.query(Data).get(args["id"])
-            if data:
+            login = db.session.query(Login).get(args["id"])
+            if login:
                 if args["username"] is not None:
-                    data.username = args["username"]
+                    login.username = args["username"]
                 if args["password"] is not None:
-                    data.password = args["password"]
+                    login.password = args["password"]
                 db.session.commit()
-                return data.to_dict(), 200
+                return login.to_dict(), 200
             else:
                 return {"message": "not found"}, 404
         except Exception as exception:
@@ -58,30 +57,21 @@ class DataAPI(Resource):
         args = parser.parse_args()
 
         try:
-            data = db.session.query(Data).get(args["id"])
-            if data:
-                db.session.delete(data)
+            login = db.session.query(Login).get(args["id"])
+            if login:
+                db.session.delete(login)
                 db.session.commit()
-                return data.to_dict()
+                return login.to_dict()
             else:
                 return {"message": "not found"}, 404
         except Exception as exception:
             db.session.rollback()
             return {"message": f"error {exception}"}, 500
 
-class DataListAPI(Resource):
+class LoginListAPI(Resource):
     def get(self):
-        data = db.session.query(Data).all()
-        return [datum.to_dict() for datum in data]
-    
-    def delete(self):
-        try:
-            db.session.query(Data).delete()
-            db.session.commit()
-            return
-        except Exception as exception:
-            db.session.rollback()
-            return {"message": f"error {exception}"}
+        logins = db.session.query(Login).all()
+        return [login.to_dict() for login in logins]
 
-data_api.add_resource(DataAPI, "/data")
-data_api.add_resource(DataListAPI, "/dataList")
+login_api.add_resource(LoginAPI, "/login")
+login_api.add_resource(LoginListAPI, "/loginList")

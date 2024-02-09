@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String
 from .. import db
 
-class Data(db.Model):
-    __tablename__ = "data"
+class Login(db.Model):
+    __tablename__ = "login"
     id = Column(Integer, primary_key=True)
     _username = Column(String, nullable=False)
     _password = Column(String, nullable=False)
@@ -12,9 +12,9 @@ class Data(db.Model):
         self._password = password
     
     def __repr__(self):
-        return "id= '%s', username='%s', password='%s'" % (self.id, self.username, self.password)
+        return "id='%s', username='%s', password='%s'" % (self.id, self.username, self.password)
     
-    @property    
+    @property
     def username(self):
         return self._username
     
@@ -33,5 +33,13 @@ class Data(db.Model):
     def to_dict(self):
         return {"id": self.id, "username": self.username, "password": self.password}
     
-def initData():
+def init_login():
+    admin = Login(username="admin", password="admin")
+    user1 = Login(username="user1", password="123456")
+    user2 = Login(username="user2", password="password")
+    
+    db.session.add(admin)
+    db.session.add(user1)
+    db.session.add(user2)
+
     db.session.commit()
