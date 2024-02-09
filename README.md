@@ -1,3 +1,1 @@
-# test_api
-
-for me to test apis
+Backend API for Scholar Search
