@@ -2,10 +2,13 @@ from flask_cors import CORS
 from scholarSearchApi import app, db
 
 from scholarSearchApi.api.login import login_bp
+from scholarSearchApi.api.data import data_bp
 
 from scholarSearchApi.model.login import init_login
+from scholarSearchApi.model.data import init_data
 
 app.register_blueprint(login_bp)
+app.register_blueprint(data_bp)
 
 @app.before_first_request
 def init_db():
@@ -13,6 +16,7 @@ def init_db():
         db.create_all()
         
         init_login()
+        init_data()
 
 if __name__ == "__main__":
     cors = CORS(app)
