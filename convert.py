@@ -1,6 +1,6 @@
 result = []
 
-with open("data.txt", "r") as file:
+with open("idata.txt", "r") as file:
     data = file.readlines()
 
 record = ''
@@ -8,7 +8,7 @@ for line in data:
     # Remove commas from the line
     line = line.replace(',', '')
     
-    if '#' in line:
+    if line.startswith('#'):
         if record:  # If there is a previous record, process it
             record_dict = {}
             lines = record.strip().split('\n')  # Split the record into lines and remove leading/trailing whitespaces
@@ -36,6 +36,6 @@ if record:
     result.append(record_dict)
 
 # Writing to temp.txt
-with open("temp.txt", "w") as output_file:
+with open("data.txt", "w") as output_file:
     for college in result:
         output_file.write(str(college) + '\n')

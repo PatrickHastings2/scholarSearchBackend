@@ -4,18 +4,18 @@ from .. import db
 class Data(db.Model):
     __tablename__ = "data"
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    city = Column(String, nullable=False)
-    state = Column(String, nullable=False)
-    zip = Column(String, nullable=False)
+    name = Column(String)
+    city = Column(String)
+    state = Column(String)
+    zip = Column(String)
     school_url = Column(String)
-    admission_rate = Column(Float)
-    average_sat = Column(Integer)
+    admission_rate = Column(String)
+    average_sat = Column(String)
     address = Column(String)
-    tuition_in_state = Column(Float)
-    tuition_out_of_state = Column(Float)
+    tuition_in_state = Column(String)
+    tuition_out_of_state = Column(String)
 
-    def __init__(self, name, city, state, zip_code, school_url=None, admission_rate=None, average_sat=None, address=None, tuition_in_state=None, tuition_out_of_state=None):
+    def __init__(self, name="null", city="null", state="null", zip_code="null", school_url="null", admission_rate="null", average_sat="null", address="null", tuition_in_state="null", tuition_out_of_state="null"):
         self.name = name
         self.city = city
         self.state = state
@@ -46,34 +46,10 @@ class Data(db.Model):
         }
 
 def init_data():
-    college1 = Data(
-        name="University of Example", 
-        city="Example City", 
-        state="Example State", 
-        zip_code="12345", 
-        school_url="https://www.example.edu", 
-        admission_rate=0.75, 
-        average_sat=1200, 
-        address="123 Example St", 
-        tuition_in_state=15000.00, 
-        tuition_out_of_state=30000.00
-    )
-    college2 = Data(
-        name="Example College", 
-        city="Another City", 
-        state="Another State", 
-        zip_code="54321", 
-        school_url="https://www.examplecollege.edu", 
-        admission_rate=0.80, 
-        average_sat=1300, 
-        address="456 College Ave", 
-        tuition_in_state=20000.00, 
-        tuition_out_of_state=35000.00
-    )
-    
-    
-    
-    db.session.add(college1)
-    db.session.add(college2)
-    
+    with open("data.txt", "r") as file:
+        lines = file.readlines()
+        for line in lines:
+            college = eval(line)
+            db.session.add(Data(name=college["Name"], city=college["City"], state=college["State"], zip_code=college["Zip"], school_url=college["School URL"], admission_rate=college["Admission Rate Overall"], average_sat=college["SAT Scores Average Overall"], address=college["Address"], tuition_in_state=college["Tuition (In-State)"], tuition_out_of_state=college["Tuition (Out-of-State)"]))
+            
     db.session.commit()
