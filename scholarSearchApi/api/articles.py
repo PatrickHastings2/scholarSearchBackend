@@ -52,8 +52,10 @@ class ArticleAPI(Resource):
 class ArticleListAPI(Resource):
     def get(self):
         articles = db.session.query(Article).all()
-        return [article.to_dict() for article in articles]  # Fix: Use `articles` instead of `article`
+        return [article.to_dict() for article in articles]
+        # Fix: Use `articles` instead of `article`
 
 
-Article_api.add_resource(ArticleAPI, "/articles")  # Fix: Add a leading slash ("/articles")
+Article_api.add_resource(ArticleAPI, "/articles")
+# Fix: Add a leading slash ("/articles")
 Article_api.add_resource(ArticleListAPI, "/articlesList")
