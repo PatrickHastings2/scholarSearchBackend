@@ -6,7 +6,6 @@ from ..model.data import Data
 data_bp = Blueprint("data", __name__)
 data_api = Api(data_bp)
 
-
 class DataAPI(Resource):
     def get(self):
         id = request.args.get("id")

@@ -1,21 +1,5 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask("Article", __name__)
-
-# Define the path and filename of the database
-database = 'sqlite:///sqlite.db'
-
-# Configure Flask app to use the database
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = database
-app.config['SECRET_KEY'] = 'SECRET_KEY'
-
-# Initialize SQLAlchemy object with the Flask app
-db = SQLAlchemy(app)
-
-# Define the Article class to manage actions in the 'articles' table
-
+from sqlalchemy import Column, Integer, String
+from .. import db
 
 class Article(db.Model):
     __tablename__ = 'articles'

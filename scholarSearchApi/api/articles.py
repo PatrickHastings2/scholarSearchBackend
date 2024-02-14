@@ -3,7 +3,7 @@ from flask_restful import Api, Resource, reqparse
 from .. import db
 from ..model.articles import Article
 
-Article_bp = Blueprint("Article", __name__)
+Article_bp = Blueprint("Article", __name__, url_prefix='/articles')
 Article_api = Api(Article_bp)
 
 
@@ -24,7 +24,7 @@ class ArticleAPI(Resource):
         data = Article(args["title"], args["author"], args["link"])
 
         try:
-            db.session.add(Article)
+            db.session.add(data)  # Fix: Use `data` instead of `Article`
             db.session.commit()
             return data.to_dict(), 201
         except Exception as exception:
@@ -51,9 +51,9 @@ class ArticleAPI(Resource):
 
 class ArticleListAPI(Resource):
     def get(self):
-        article = db.session.query(Article).all()
-        return [article.to_dict() for article in article]
+        articles = db.session.query(Article).all()
+        return [article.to_dict() for article in articles]  # Fix: Use `articles` instead of `article`
 
 
-Article_api.add_resource(ArticleAPI, "/articles")
+Article_api.add_resource(ArticleAPI, "/articles")  # Fix: Add a leading slash ("/articles")
 Article_api.add_resource(ArticleListAPI, "/articlesList")
