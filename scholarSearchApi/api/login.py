@@ -6,6 +6,7 @@ from ..model.login import Login
 login_bp = Blueprint("login", __name__)
 login_api = Api(login_bp)
 
+
 class LoginAPI(Resource):
     def get(self):
         id = request.args.get("id")
@@ -27,7 +28,7 @@ class LoginAPI(Resource):
             return login.to_dict(), 201
         except Exception as exception:
             db.session.rollback()
-            return {"message":f"error {exception}"}, 500
+            return {"message": f"error {exception}"}, 500
 
     def put(self):
         parser = reqparse.RequestParser()
@@ -35,7 +36,7 @@ class LoginAPI(Resource):
         parser.add_argument("username", type=str)
         parser.add_argument("password", type=str)
         args = parser.parse_args()
-        
+
         try:
             login = db.session.query(Login).get(args["id"])
             if login:
@@ -50,7 +51,7 @@ class LoginAPI(Resource):
         except Exception as exception:
             db.session.rollback()
             return {"message": f"error {exception}"}, 500
-    
+
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument("id", required=True, type=int)
@@ -68,10 +69,12 @@ class LoginAPI(Resource):
             db.session.rollback()
             return {"message": f"error {exception}"}, 500
 
+
 class LoginListAPI(Resource):
     def get(self):
         logins = db.session.query(Login).all()
         return [login.to_dict() for login in logins]
+
 
 login_api.add_resource(LoginAPI, "/login")
 login_api.add_resource(LoginListAPI, "/loginList")

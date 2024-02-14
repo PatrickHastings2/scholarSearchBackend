@@ -6,6 +6,7 @@ from ..model.data import Data
 data_bp = Blueprint("data", __name__)
 data_api = Api(data_bp)
 
+
 class DataAPI(Resource):
     def get(self):
         id = request.args.get("id")
@@ -27,7 +28,10 @@ class DataAPI(Resource):
         parser.add_argument("tuition_in_state", type=str)
         parser.add_argument("tuition_out_of_state", type=str)
         args = parser.parse_args()
-        data = Data(args["name"], args["city"], args["state"], args["zip"], args["school_url"], args["admission_rate"], args["average_sat"], args["address"], args["tuition_in_state"], args["tuition_out_of_state"])
+        data = Data(args["name"], args["city"], args["state"], args["zip"],
+                    args["school_url"], args["admission_rate"],
+                    args["average_sat"], args["address"],
+                    args["tuition_in_state"], args["tuition_out_of_state"])
 
         try:
             db.session.add(data)
@@ -35,7 +39,7 @@ class DataAPI(Resource):
             return data.to_dict(), 201
         except Exception as exception:
             db.session.rollback()
-            return {"message":f"error {exception}"}, 500
+            return {"message": f"error {exception}"}, 500
 
     def put(self):
         parser = reqparse.RequestParser()
@@ -51,7 +55,7 @@ class DataAPI(Resource):
         parser.add_argument("tuition_in_state", type=str)
         parser.add_argument("tuition_out_of_state", type=str)
         args = parser.parse_args()
-        
+
         try:
             data = db.session.query(Data).get(args["id"])
             if data:
@@ -82,7 +86,7 @@ class DataAPI(Resource):
         except Exception as exception:
             db.session.rollback()
             return {"message": f"error {exception}"}, 500
-    
+
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument("id", required=True, type=int)
@@ -100,10 +104,12 @@ class DataAPI(Resource):
             db.session.rollback()
             return {"message": f"error {exception}"}, 500
 
+
 class DataListAPI(Resource):
     def get(self):
         data = db.session.query(Data).all()
         return [d.to_dict() for d in data]
+
 
 data_api.add_resource(DataAPI, "/data")
 data_api.add_resource(DataListAPI, "/dataList")
