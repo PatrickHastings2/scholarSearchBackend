@@ -14,7 +14,8 @@ app.register_blueprint(data_bp)
 app.register_blueprint(Article_bp)
 
 
-@app.before_first_request
+
+@app.before_request
 def init_db():
     with app.app_context():
         db.create_all()
